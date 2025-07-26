@@ -73,8 +73,6 @@
             padding: 2.5rem; max-width: 800px; margin: 0 auto;
         }
         #home-banner-img { width: 100%; height: 300px; object-fit: cover; border-radius: 20px; margin-bottom: 2rem; border: 1px solid rgba(255,255,255,0.2); }
-        .content-box p { font-size: 1.1rem; color: #ccc; }
-        .intro-text { font-style: italic; color: #ddd !important; }
         #contentGrid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 2rem; }
         .chapter-card {
             background: rgba(20, 20, 30, 0.5); backdrop-filter: blur(12px); border-radius: 25px;
@@ -97,62 +95,59 @@
         }
         .btn-outline:hover { transform: scale(1.05); background: var(--primary-glow); color: #0e0e0e; }
         
-        /* --- NEW: Interaction Section --- */
-        .interaction-section {
-            margin-top: 3rem;
-            padding-top: 2rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
-            max-width: 800px;
-            margin-left: auto;
-            margin-right: auto;
-        }
+        /* Interaction Section */
+        .interaction-section { margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(255, 255, 255, 0.2); max-width: 800px; margin-left: auto; margin-right: auto; }
         .reactions { text-align: center; margin-bottom: 2rem; }
-        .reaction-btn {
-            font-size: 1.5rem;
-            background: none; border: none; color: #888;
-            cursor: pointer; transition: color 0.2s, transform 0.2s;
-            margin: 0 1rem; padding: 0.5rem;
-        }
+        .reaction-btn { font-size: 1.5rem; background: none; border: none; color: #888; cursor: pointer; transition: color 0.2s, transform 0.2s; margin: 0 1rem; padding: 0.5rem; }
         .reaction-btn:hover { color: #fff; transform: scale(1.1); }
         .reaction-btn.voted { color: var(--primary-glow); cursor: not-allowed; }
         .reaction-btn.voted-dislike { color: var(--secondary-glow); cursor: not-allowed; }
         .reaction-count { font-size: 1rem; color: #ccc; }
-        
         .comments-container { margin-top: 2rem; }
-        #comment-form {
-            background: rgba(20, 20, 30, 0.5); backdrop-filter: blur(5px);
-            border-radius: 20px; padding: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        #comment-form input, #comment-form textarea {
-            width: 100%; padding: 0.8rem 1rem; background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px;
-            color: #f0f0f0; font-family: 'Poppins', sans-serif; margin-bottom: 1rem;
-        }
-        #comment-form input:focus, #comment-form textarea:focus {
-            outline: none; border-color: var(--primary-glow); box-shadow: 0 0 15px var(--primary-glow);
-        }
+        #comment-form { background: rgba(20, 20, 30, 0.5); backdrop-filter: blur(5px); border-radius: 20px; padding: 1.5rem; border: 1px solid rgba(255, 255, 255, 0.1); }
+        #comment-form input, #comment-form textarea { width: 100%; padding: 0.8rem 1rem; background: rgba(0,0,0,0.4); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 15px; color: #f0f0f0; font-family: 'Poppins', sans-serif; margin-bottom: 1rem; }
+        #comment-form input:focus, #comment-form textarea:focus { outline: none; border-color: var(--primary-glow); box-shadow: 0 0 15px var(--primary-glow); }
         #comments-list { list-style: none; margin-top: 2rem; }
-        .comment-item {
-            background: rgba(0,0,0,0.2); border-radius: 15px; padding: 1rem 1.5rem;
-            margin-bottom: 1rem; border-left: 3px solid var(--primary-glow);
-        }
+        .comment-item { background: rgba(0,0,0,0.2); border-radius: 15px; padding: 1rem 1.5rem; margin-bottom: 1rem; border-left: 3px solid var(--primary-glow); }
         .comment-item.is-reply { border-left-color: var(--admin-reply-glow); }
         .comment-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem; }
         .comment-author { font-weight: 700; color: #fff; }
         .comment-author.is-reply { color: var(--admin-reply-glow); }
         .comment-date { font-size: 0.8rem; color: #888; }
         .comment-text { color: #ccc; }
+
+        /* --- NEW: Video Container --- */
+        #video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 Aspect Ratio */
+            margin-bottom: 2rem;
+            border-radius: 20px;
+            overflow: hidden;
+            background: #000;
+        }
+        #video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
     </style>
 </head>
 <body>
+    <!-- NEW: Hidden Audio Player -->
+    <audio id="background-audio" loop></audio>
 
     <header>
-        <div class="menu-icon" id="menuIcon">&#9776;</div>
+        <div class="menu-icon" id="menuIcon">☰</div>
         <div class="header-title" id="storyTitleHeader">Loading...</div>
     </header>
 
     <div class="side-menu" id="sideMenu">
-        <div class="menu-close" id="menuClose">&times;</div>
+        <div class="menu-close" id="menuClose">×</div>
         <nav>
             <a href="#home" class="nav-link">Home</a>
             <a href="#chapters" class="nav-link">All Chapters</a>
@@ -168,14 +163,20 @@
     <section id="readerPage" class="page">
         <div class="container">
             <h1 id="chapter-title" class="page-title"></h1>
-            <img id="chapter-image" src="" alt="Chapter Image" style="display: none;">
-            <div id="chapter-content"></div>
             
-            <!-- NEW: Interaction Section -->
+            <!-- NEW: Video container will be shown if a video URL exists -->
+            <div id="video-container" style="display: none;"></div>
+            
+            <!-- Text/Image content will be shown if no video URL -->
+            <div id="text-image-content">
+                <img id="chapter-image" src="" alt="Chapter Image" style="display: none;">
+                <div id="chapter-content"></div>
+            </div>
+            
             <div class="interaction-section">
                 <div class="reactions">
-                    <button class="reaction-btn" id="likeBtn" title="Like">&#128077; <span id="likeCount" class="reaction-count">0</span></button>
-                    <button class="reaction-btn" id="dislikeBtn" title="Dislike">&#128078; <span id="dislikeCount" class="reaction-count">0</span></button>
+                    <button class="reaction-btn" id="likeBtn" title="Like"> <span id="likeCount" class="reaction-count">0</span></button>
+                    <button class="reaction-btn" id="dislikeBtn" title="Dislike"> <span id="dislikeCount" class="reaction-count">0</span></button>
                 </div>
                 <div class="comments-container">
                     <h3 class="page-title" style="font-size: 1.8rem;">Comments</h3>
@@ -207,15 +208,29 @@
         const db = firebase.database();
 
         let storyData = null, authorData = null, currentChapterId = null;
-        let storyId = null; // Will hold the unique ID of the story
+        let storyId = null;
+        let reactionListeners = [];
         
         const pages = document.querySelectorAll('.page');
         const menuIcon = document.getElementById('menuIcon');
         const menuClose = document.getElementById('menuClose');
         const sideMenu = document.getElementById('sideMenu');
         const contentGrid = document.getElementById('contentGrid');
-        
+        const audioPlayer = document.getElementById('background-audio'); // NEW
+
+        // --- NEW: Audio Control ---
+        function stopBackgroundAudio() {
+            if (!audioPlayer.paused) {
+                audioPlayer.pause();
+                audioPlayer.currentTime = 0;
+            }
+            audioPlayer.src = '';
+        }
+
         function showPage(pageId) {
+            if (pageId !== 'readerPage') {
+                stopBackgroundAudio(); // Stop audio when leaving the reader page
+            }
             pages.forEach(p => p.classList.remove('active'));
             const targetPage = document.getElementById(pageId);
             if(targetPage) targetPage.classList.add('active');
@@ -223,19 +238,14 @@
             window.scrollTo(0, 0);
         }
 
-        function updateActiveNav(hash) {
-            document.querySelectorAll('.side-menu a').forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('href') === hash) link.classList.add('active');
-            });
-        }
-        
         function router() {
             let hash = window.location.hash || '#home';
             updateActiveNav(hash);
             if (hash.startsWith('#chapter-')) {
                 const chapterId = hash.substring(9);
-                renderReaderPage(chapterId);
+                if (chapterId !== currentChapterId) { // Only re-render if chapter changes
+                    renderReaderPage(chapterId);
+                }
             } else if (hash === '#home') renderHomePage();
             else if (hash === '#about') renderAboutPage();
             else if (hash === '#chapters') renderChaptersGrid();
@@ -254,15 +264,9 @@
             if (card) window.location.hash = `#chapter-${card.dataset.chapterId}`;
         });
 
-        function renderHomePage() { /* ... (no changes) ... */ }
-        function renderAboutPage() { /* ... (no changes) ... */ }
-        function renderChaptersGrid() { /* ... (no changes) ... */ }
-        // The above functions are unchanged for brevity but included in the final code block.
-
-        let reactionListeners = [];
         function renderReaderPage(chapterId) {
+            stopBackgroundAudio(); // Stop previous chapter's audio
             currentChapterId = chapterId;
-            // Detach previous listeners to prevent memory leaks
             reactionListeners.forEach(ref => ref.off());
             reactionListeners = [];
 
@@ -271,90 +275,43 @@
             }
             const chapter = storyData.chapters[chapterId];
             document.getElementById('chapter-title').textContent = chapter.title;
-            const chapterImageEl = document.getElementById('chapter-image');
-            chapterImageEl.style.display = chapter.imageUrl ? 'block' : 'none';
-            if(chapter.imageUrl) chapterImageEl.src = chapter.imageUrl;
-            
-            const formattedContent = (chapter.content || '').replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/\n/g, '</p><p>');
-            document.getElementById('chapter-content').innerHTML = `<p>${formattedContent}</p>`;
+
+            const videoContainer = document.getElementById('video-container');
+            const textImageContent = document.getElementById('text-image-content');
+
+            // --- NEW: Video/Text Content Logic ---
+            if (chapter.videoUrl) {
+                // Show video, hide text/image content
+                videoContainer.style.display = 'block';
+                textImageContent.style.display = 'none';
+                videoContainer.innerHTML = `<iframe src="${chapter.videoUrl}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>`;
+            } else {
+                // Show text/image content, hide video
+                videoContainer.style.display = 'none';
+                textImageContent.style.display = 'block';
+                videoContainer.innerHTML = ''; // Clear iframe
+
+                const chapterImageEl = document.getElementById('chapter-image');
+                chapterImageEl.style.display = chapter.imageUrl ? 'block' : 'none';
+                if(chapter.imageUrl) chapterImageEl.src = chapter.imageUrl;
+                
+                const formattedContent = (chapter.content || 'This chapter is currently empty.').replace(/&/g, "&").replace(/</g, "<").replace(/>/g, ">").replace(/\n/g, '</p><p>');
+                document.getElementById('chapter-content').innerHTML = `<p>${formattedContent}</p>`;
+            }
+
+            // --- NEW: Play Audio Logic ---
+            if (chapter.audioUrl) {
+                audioPlayer.src = chapter.audioUrl;
+                audioPlayer.play().catch(e => console.log("Autoplay was prevented by the browser. User interaction is needed."));
+            }
             
             setupReactions(chapterId);
             setupComments(chapterId);
             showPage('readerPage');
         }
-
-        function setupReactions(chapterId) {
-            const likeRef = db.ref(`stories/${storyId}/chapters/${chapterId}/likes`);
-            const dislikeRef = db.ref(`stories/${storyId}/chapters/${chapterId}/dislikes`);
-            
-            reactionListeners.push(likeRef, dislikeRef); // Store refs to detach later
-
-            likeRef.on('value', snap => { document.getElementById('likeCount').textContent = snap.val() || 0; });
-            dislikeRef.on('value', snap => { document.getElementById('dislikeCount').textContent = snap.val() || 0; });
-
-            // Check local storage to see if user has already voted
-            const voteStatus = localStorage.getItem(`vote_status_${chapterId}`);
-            const likeBtn = document.getElementById('likeBtn');
-            const dislikeBtn = document.getElementById('dislikeBtn');
-
-            likeBtn.className = 'reaction-btn';
-            dislikeBtn.className = 'reaction-btn';
-
-            if (voteStatus === 'liked') {
-                likeBtn.classList.add('voted');
-            } else if (voteStatus === 'disliked') {
-                dislikeBtn.classList.add('voted-dislike');
-            }
-        }
-
-        function setupComments(chapterId) {
-            const commentsList = document.getElementById('comments-list');
-            const commentsRef = db.ref(`stories/${storyId}/chapters/${chapterId}/comments`).orderByChild('timestamp');
-            
-            reactionListeners.push(commentsRef); // Store ref to detach later
-
-            commentsRef.on('value', snapshot => {
-                commentsList.innerHTML = '';
-                if (!snapshot.exists()) {
-                    commentsList.innerHTML = '<li><p>No comments yet. Be the first!</p></li>';
-                    return;
-                }
-                snapshot.forEach(child => {
-                    const comment = child.val();
-                    const date = new Date(comment.timestamp).toLocaleString();
-                    const li = document.createElement('li');
-                    li.className = `comment-item ${comment.isReply ? 'is-reply' : ''}`;
-                    li.innerHTML = `
-                        <div class="comment-header">
-                            <span class="comment-author ${comment.isReply ? 'is-reply' : ''}">${comment.name} ${comment.isReply ? '(Admin)' : ''}</span>
-                            <span class="comment-date">${date}</span>
-                        </div>
-                        <p class="comment-text">${comment.text.replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>
-                    `;
-                    commentsList.prepend(li); // Show newest first
-                });
-            });
-        }
-
+        
         document.getElementById('likeBtn').addEventListener('click', () => handleVote('liked'));
         document.getElementById('dislikeBtn').addEventListener('click', () => handleVote('disliked'));
-
-        function handleVote(voteType) {
-            const voteStatus = localStorage.getItem(`vote_status_${currentChapterId}`);
-            if (voteStatus) {
-                alert("You have already reacted to this chapter.");
-                return;
-            }
-            
-            const refPath = voteType === 'liked' ? 'likes' : 'dislikes';
-            const itemRef = db.ref(`stories/${storyId}/chapters/${currentChapterId}/${refPath}`);
-            
-            itemRef.transaction(currentCount => (currentCount || 0) + 1)
-                .then(() => {
-                    localStorage.setItem(`vote_status_${currentChapterId}`, voteType);
-                     setupReactions(currentChapterId); // Re-render button state
-                });
-        }
 
         document.getElementById('comment-form').addEventListener('submit', (e) => {
             e.preventDefault();
@@ -375,35 +332,21 @@
 
             db.ref(`stories/${storyId}/chapters/${currentChapterId}/comments`).push(commentData)
                 .then(() => {
-                    textInput.value = ''; // Clear comment box, but keep name
+                    textInput.value = '';
                 })
                 .catch(err => console.error(err));
         });
 
-        function populateNavigation() { /* ... (no changes) ... */ }
-        function initializeApp() {
-            db.ref('author').once('value', snapshot => { if (snapshot.exists()) authorData = snapshot.val(); });
-            db.ref('stories').limitToFirst(1).on('value', snapshot => {
-                if (snapshot.exists()) {
-                    storyId = Object.keys(snapshot.val())[0];
-                    storyData = snapshot.val()[storyId];
-                    document.title = storyData.title || "Neon Story Hub";
-                    document.getElementById('storyTitleHeader').textContent = storyData.title;
-                    populateNavigation();
-                    router();
-                } else {
-                    document.getElementById('loadingPage').textContent = "No story found.";
-                }
-            }, error => {
-                document.getElementById('loadingPage').textContent = "Error connecting to database.";
-            });
-        }
-
-        // Unchanged functions (to keep the block smaller, but they are needed)
-        function renderHomePage() { if (!storyData) return; document.getElementById('home-banner-img').src = storyData.imageUrl || ''; document.getElementById('home-title').textContent = storyData.title || ''; document.getElementById('home-intro').textContent = storyData.intro || ''; showPage('homePage'); }
-        function renderAboutPage() { if (!authorData) return; document.getElementById('author-bio').innerHTML = (authorData.bio || '').replace(/\n/g, '<br>'); showPage('aboutPage'); }
-        function renderChaptersGrid() { if (!storyData || !storyData.chapters) return; contentGrid.innerHTML = ''; Object.entries(storyData.chapters).sort((a, b) => parseInt(a[0]) - parseInt(b[0])).forEach(([id, chapter]) => { const card = document.createElement('div'); card.className = 'chapter-card'; card.dataset.chapterId = id; card.innerHTML = `<div class="chapter-number">Chapter ${id}</div><h3>${chapter.title}</h3><p class="summary">${chapter.summary || ''}</p><button class="btn-outline">Read Chapter</button>`; contentGrid.appendChild(card); }); showPage('chaptersPage'); }
+        // --- All other functions (initializeApp, handleVote, setupReactions, etc.) remain unchanged ---
+        function initializeApp() { db.ref('author').once('value', snapshot => { if (snapshot.exists()) authorData = snapshot.val(); }); db.ref('stories').limitToFirst(1).on('value', snapshot => { if (snapshot.exists()) { storyId = Object.keys(snapshot.val())[0]; storyData = snapshot.val()[storyId]; document.title = storyData.title || "Neon Story Hub"; document.getElementById('storyTitleHeader').textContent = storyData.title; populateNavigation(); router(); } else { document.getElementById('loadingPage').textContent = "No story found."; } }, error => { document.getElementById('loadingPage').textContent = "Error connecting to database."; }); }
         function populateNavigation() { if (!storyData || !storyData.chapters) return; const navContainer = document.getElementById('dynamic-chapters-nav'); navContainer.innerHTML = ''; Object.keys(storyData.chapters).sort((a, b) => parseInt(a) - parseInt(b)).forEach(id => { const link = document.createElement('a'); link.href = `#chapter-${id}`; link.className = 'nav-link'; link.textContent = `Chapter ${id}: ${storyData.chapters[id].title}`; navContainer.appendChild(link); }); }
+        function updateActiveNav(hash) { document.querySelectorAll('.side-menu a').forEach(link => { link.classList.remove('active'); if (link.getAttribute('href') === hash) link.classList.add('active'); }); }
+        function renderHomePage() { stopBackgroundAudio(); if (!storyData) return; document.getElementById('home-banner-img').src = storyData.imageUrl || ''; document.getElementById('home-title').textContent = storyData.title || ''; document.getElementById('home-intro').textContent = storyData.intro || ''; showPage('homePage'); }
+        function renderAboutPage() { stopBackgroundAudio(); if (!authorData) return; document.getElementById('author-bio').innerHTML = (authorData.bio || '').replace(/\n/g, '<br>'); showPage('aboutPage'); }
+        function renderChaptersGrid() { stopBackgroundAudio(); if (!storyData || !storyData.chapters) return; contentGrid.innerHTML = ''; Object.entries(storyData.chapters).sort((a, b) => parseInt(a[0]) - parseInt(b[0])).forEach(([id, chapter]) => { const card = document.createElement('div'); card.className = 'chapter-card'; card.dataset.chapterId = id; card.innerHTML = `<div class="chapter-number">Chapter ${id}</div><h3>${chapter.title}</h3><p class="summary">${chapter.summary || ''}</p><button class="btn-outline">Read Chapter</button>`; contentGrid.appendChild(card); }); showPage('chaptersPage'); }
+        function setupReactions(chapterId) { const likeRef = db.ref(`stories/${storyId}/chapters/${chapterId}/likes`); const dislikeRef = db.ref(`stories/${storyId}/chapters/${chapterId}/dislikes`); reactionListeners.push(likeRef, dislikeRef); likeRef.on('value', snap => { document.getElementById('likeCount').textContent = snap.val() || 0; }); dislikeRef.on('value', snap => { document.getElementById('dislikeCount').textContent = snap.val() || 0; }); const voteStatus = localStorage.getItem(`vote_status_${chapterId}`); const likeBtn = document.getElementById('likeBtn'); const dislikeBtn = document.getElementById('dislikeBtn'); likeBtn.className = 'reaction-btn'; dislikeBtn.className = 'reaction-btn'; if (voteStatus === 'liked') { likeBtn.classList.add('voted'); } else if (voteStatus === 'disliked') { dislikeBtn.classList.add('voted-dislike'); } }
+        function setupComments(chapterId) { const commentsList = document.getElementById('comments-list'); const commentsRef = db.ref(`stories/${storyId}/chapters/${chapterId}/comments`).orderByChild('timestamp'); reactionListeners.push(commentsRef); commentsRef.on('value', snapshot => { commentsList.innerHTML = ''; if (!snapshot.exists()) { commentsList.innerHTML = '<li><p>No comments yet. Be the first!</p></li>'; return; } snapshot.forEach(child => { const comment = child.val(); const date = new Date(comment.timestamp).toLocaleString(); const li = document.createElement('li'); li.className = `comment-item ${comment.isReply ? 'is-reply' : ''}`; li.innerHTML = `<div class="comment-header"><span class="comment-author ${comment.isReply ? 'is-reply' : ''}">${comment.name} ${comment.isReply ? '(Admin)' : ''}</span><span class="comment-date">${date}</span></div><p class="comment-text">${comment.text.replace(/</g, "<").replace(/>/g, ">")}</p>`; commentsList.prepend(li); }); }); }
+        function handleVote(voteType) { const voteStatus = localStorage.getItem(`vote_status_${currentChapterId}`); if (voteStatus) { alert("You have already reacted to this chapter."); return; } const refPath = voteType === 'liked' ? 'likes' : 'dislikes'; const itemRef = db.ref(`stories/${storyId}/chapters/${currentChapterId}/${refPath}`); itemRef.transaction(currentCount => (currentCount || 0) + 1).then(() => { localStorage.setItem(`vote_status_${currentChapterId}`, voteType); setupReactions(currentChapterId); }); }
     </script>
 </body>
 </html>
